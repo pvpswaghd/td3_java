@@ -11,6 +11,8 @@ public class Settings extends GameScene implements SceneMethods {
 
     @Override
     public void render(Graphics g) {
+        g.setColor(Color.BLUE);
+        g.fillRect(0,0, 640, 640);
 
     }
 }

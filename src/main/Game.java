@@ -28,6 +28,7 @@ public class Game extends JFrame implements Runnable {
     public Game () {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Set position in centre
+        setResizable(false);
         initClasses();
         add(gameScreen);
         pack();
@@ -105,6 +106,18 @@ public class Game extends JFrame implements Runnable {
     }
 
     // Getters and Setters
+
+    public Menu getMenu() {
+        return menu;
+    }
+
+    public Playing getPlaying() {
+        return playing;
+    }
+
+    public Settings getSettings() {
+        return settings;
+    }
 
     public Render getRender() {
         return render;
