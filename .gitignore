@@ -1,5 +1,6 @@
 ### IntelliJ IDEA ###
 out/
+res.properties
 !**/src/main/**/out/
 !**/src/test/**/out/
 
