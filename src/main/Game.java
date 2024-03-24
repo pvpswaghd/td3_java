@@ -1,14 +1,7 @@
 package main;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
-import java.security.Key;
-import java.util.ArrayList;
-import java.io.IOException;
-import java.io.InputStream;
-import inputs.MyMouseListener;
-import inputs.KeyboardListener;
 import scenes.Menu;
 import scenes.Playing;
 import scenes.Settings;
