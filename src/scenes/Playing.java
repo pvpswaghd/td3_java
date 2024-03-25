@@ -3,18 +3,16 @@ package scenes;
 import helpers.LevelBuild;
 import main.Game;
 import managers.TileManager;
+import objects.Tile;
 import ui.BottomBar;
-import ui.MyButton;
-
 import java.awt.*;
-
-import static main.GameStates.MENU;
-import static main.GameStates.SetGameState;
 
 public class Playing extends GameScene implements SceneMethods{
     private int[][] lvl;
     private TileManager tileManager;
+    private Tile selectedTile;
     private BottomBar bottomBar;
+    private int mouseX, mouseY;
     public Playing(Game game) {
         super(game);
         lvl = LevelBuild.getLevelData();
@@ -31,6 +29,17 @@ public class Playing extends GameScene implements SceneMethods{
             }
         }
         bottomBar.draw(g);
+        drawSelectedTile(g);
+    }
+
+    private void drawSelectedTile(Graphics g) {
+        if (selectedTile != null) {
+            g.drawImage(selectedTile.getSprite(), mouseX, mouseY, 32, 32, null);
+        }
+    }
+
+    public void setSelectedTile(Tile tile) {
+        this.selectedTile = tile;
     }
 
     public TileManager getTileManager() {
@@ -48,6 +57,10 @@ public class Playing extends GameScene implements SceneMethods{
     public void mouseMoved(int x, int y) {
         if (y >= 640) {
             bottomBar.mouseMoved(x, y);
+        }
+        else {
+            mouseX = x;
+            mouseY = y;
         }
     }
 
