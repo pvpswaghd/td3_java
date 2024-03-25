@@ -13,6 +13,8 @@ public class Playing extends GameScene implements SceneMethods{
     private Tile selectedTile;
     private BottomBar bottomBar;
     private int mouseX, mouseY;
+    private int lastTileX, lastTileY;
+    private boolean drawSelect = false;
     public Playing(Game game) {
         super(game);
         lvl = LevelBuild.getLevelData();
@@ -33,13 +35,14 @@ public class Playing extends GameScene implements SceneMethods{
     }
 
     private void drawSelectedTile(Graphics g) {
-        if (selectedTile != null) {
+        if (selectedTile != null && drawSelect) {
             g.drawImage(selectedTile.getSprite(), mouseX, mouseY, 32, 32, null);
         }
     }
 
     public void setSelectedTile(Tile tile) {
         this.selectedTile = tile;
+        drawSelect = true;
     }
 
     public TileManager getTileManager() {
@@ -51,16 +54,33 @@ public class Playing extends GameScene implements SceneMethods{
         if (y >= 640) {
             bottomBar.mouseClicked(x, y);
         }
+        else {
+            changeTile(mouseX, mouseY);
+        }
+    }
+
+    private void changeTile(int x, int y) {
+        if (selectedTile != null) {
+            int tileX = x / 32;
+            int tileY = y / 32;
+            if (lastTileX == tileX && lastTileY == tileY)
+                return;
+            lastTileX = tileX;
+            lastTileY = tileY;
+            lvl[tileY][tileX] = selectedTile.getId();
+        }
     }
 
     @Override
     public void mouseMoved(int x, int y) {
         if (y >= 640) {
             bottomBar.mouseMoved(x, y);
+            drawSelect = false;
         }
         else {
-            mouseX = x;
-            mouseY = y;
+            mouseX = (x / 32) * 32;
+            mouseY = (y / 32) * 32;
+            drawSelect = true;
         }
     }
 
@@ -69,12 +89,25 @@ public class Playing extends GameScene implements SceneMethods{
         if (y >= 640) {
             bottomBar.mousePressed(x, y);
         }
+        else {
+            changeTile(mouseX, mouseY);
+        }
     }
 
     @Override
     public void mouseReleased(int x, int y) {
         if (y >= 640) {
             bottomBar.mouseReleased(x, y);
+        }
+    }
+
+    @Override
+    public void mouseDragged(int x, int y) {
+        if (y >= 640) {
+
+        }
+        else {
+            changeTile(x, y);
         }
     }
 }
