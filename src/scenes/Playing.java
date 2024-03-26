@@ -1,135 +1,78 @@
 package scenes;
 
-import helpers.LevelBuild;
 import helpers.LoadSave;
 import main.Game;
 import managers.TileManager;
-import objects.Tile;
-import ui.BottomBar;
+import ui.ActionBar;
 import java.awt.*;
-import java.util.Arrays;
+import java.awt.image.BufferedImage;
 
 public class Playing extends GameScene implements SceneMethods{
     private int[][] lvl;
-    private TileManager tileManager;
-    private Tile selectedTile;
-    private BottomBar bottomBar;
+    private ActionBar actionBar;
     private int mouseX, mouseY;
-    private int lastTileX, lastTileY;
-    private boolean drawSelect = false;
     public Playing(Game game) {
         super(game);
-        lvl = LevelBuild.getLevelData();
-        tileManager = new TileManager();
-        bottomBar = new BottomBar(0, 640, 640, 100, this);
-//        LoadSave.WriteToFile();
-//        LoadSave.ReadFromFile();
-        createDefaultLevel();
         loadDefaultLevel();
+        actionBar = new ActionBar(0, 640, 640, 100, this);
     }
-
-    public void saveLevel() {
-        LoadSave.SaveLevel("new_level", lvl);
-    }
-
     private void loadDefaultLevel() {
         lvl = LoadSave.GetLevelData("new_level");
     }
-
-    private void createDefaultLevel() {
-        int[] arr = new int[400];
-        for (int i = 0; i < arr.length; i++)
-            arr[i] = 0;
-        LoadSave.CreateLevel("new_level", arr);
+    public void setLevel(int[][] lvl) {
+        this.lvl = lvl;
     }
-
-
     @Override
     public void render(Graphics g) {
+        drawLevel(g);
+        actionBar.draw(g);
+    }
+    private void drawLevel(Graphics g) {
         for (int y = 0; y < lvl.length; y++) {
             for (int x = 0; x < lvl[y].length; x++) {
                 int id = lvl[y][x];
-                g.drawImage(tileManager.getSprite(id), x*32, y*32, null);
+                g.drawImage(getSprite(id), x*32, y*32, null);
             }
         }
-        bottomBar.draw(g);
-        drawSelectedTile(g);
+    }
+    private BufferedImage getSprite(int spriteID) {
+        return game.getTileManager().getSprite(spriteID);
     }
 
-    private void drawSelectedTile(Graphics g) {
-        if (selectedTile != null && drawSelect) {
-            g.drawImage(selectedTile.getSprite(), mouseX, mouseY, 32, 32, null);
-        }
-    }
 
-    public void setSelectedTile(Tile tile) {
-        this.selectedTile = tile;
-        drawSelect = true;
-    }
-
-    public TileManager getTileManager() {
-        return tileManager;
-    }
 
     @Override
     public void mouseClicked(int x, int y) {
         if (y >= 640) {
-            bottomBar.mouseClicked(x, y);
-        }
-        else {
-            changeTile(mouseX, mouseY);
+            actionBar.mouseClicked(x, y);
         }
     }
 
-    private void changeTile(int x, int y) {
-        if (selectedTile != null) {
-            int tileX = x / 32;
-            int tileY = y / 32;
-            if (lastTileX == tileX && lastTileY == tileY)
-                return;
-            lastTileX = tileX;
-            lastTileY = tileY;
-            lvl[tileY][tileX] = selectedTile.getId();
-        }
-    }
 
     @Override
     public void mouseMoved(int x, int y) {
         if (y >= 640) {
-            bottomBar.mouseMoved(x, y);
-            drawSelect = false;
+            actionBar.mouseMoved(x, y);
         }
         else {
             mouseX = (x / 32) * 32;
             mouseY = (y / 32) * 32;
-            drawSelect = true;
         }
     }
 
     @Override
     public void mousePressed(int x, int y) {
         if (y >= 640) {
-            bottomBar.mousePressed(x, y);
-        }
-        else {
-            changeTile(mouseX, mouseY);
+            actionBar.mousePressed(x, y);
         }
     }
 
     @Override
     public void mouseReleased(int x, int y) {
-        if (y >= 640) {
-            bottomBar.mouseReleased(x, y);
-        }
+        actionBar.mouseReleased(x, y);
     }
 
     @Override
     public void mouseDragged(int x, int y) {
-        if (y >= 640) {
-
-        }
-        else {
-            changeTile(x, y);
-        }
     }
 }

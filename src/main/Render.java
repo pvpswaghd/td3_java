@@ -3,8 +3,6 @@ package main;
 import java.awt.*;
 public class Render {
     private Game game;
-
-
     public Render(Game game) {
         this.game = game;
     }
@@ -19,6 +17,9 @@ public class Render {
                 break;
             case SETTINGS:
                 game.getSettings().render(g);
+                break;
+            case EDIT:
+                game.getEditor().render(g);
                 break;
         }
     }
